@@ -3,6 +3,8 @@ use regex::Regex;
 use std::io::prelude::*;
 use std::fs::File;
 
+const FROM_1_0_DATE: &'static str = "201(?:6-|5-(?:1|0(?:[6-9]|5-(?:2|1[5-9]))))";
+
 fn load_file(name: &str) -> Option<String> {
     let mut f = match File::open(name) {
         Ok(f) => f,
@@ -37,14 +39,14 @@ fn cached_region(name: &str, data: &str) -> String {
 
 fn count_posts(data: &str) {
     let posts = cached_region("posts", data);
-    let date_filter = Regex::new(r"(?m)^.*201(?:6-|5-(?:1|0(?:[6-9]|5-(?:2|1[5-9]))))").unwrap();
+    let date_filter = Regex::new(&format!(r"(?m)^.*{}", FROM_1_0_DATE)).unwrap();
     println!("posts: {}", date_filter.find_iter(&posts).count());
 
 }
 
 fn count_likes(data: &str) {
     let likes = cached_region("given_daily_likes", data);
-    let line_filter = Regex::new(r"(?m)^.*\s(\d+)\s*201(?:6-|5-(?:1|0(?:[6-9]|5-(?:2|1[5-9]))))").unwrap();
+    let line_filter = Regex::new(&format!(r"(?m)^.*\s(\d+)\s*{}", FROM_1_0_DATE)).unwrap();
 
     let mut sum = 0;
     for c in line_filter.captures_iter(&likes) {
