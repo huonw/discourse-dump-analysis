@@ -1,0 +1,7 @@
+[package]
+authors = ["Huon Wilson <dbau.pp+github@gmail.com>"]
+name = "users-analysis"
+version = "0.1.0"
+
+[dependencies]
+regex = "0.1.69"
